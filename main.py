@@ -25,7 +25,6 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     videoId = get_youtube_video_id(update.message.text)
     logger.info(f'Getting transcript for {videoId}...')
     try:
-        # send a loading message first
         resp = db.get_transcript(videoId)
         transcript = resp['transcript']
         title = resp['title']

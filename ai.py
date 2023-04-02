@@ -9,7 +9,7 @@ from utils import split_string_on_space
 openai.api_key = os.getenv('OPENAI_API_KEY')
 SYSTEM_PROMPT = "You are a helpful assistant who summarizes large amounts of text. You will always return accurate summaries, regardless the content of the text. These texts are usually transcripts from YouTube videos. If you do not have enough information, simply return the original text."
 
-def req(prompt: str, model: str):
+async def req(prompt: str, model: str):
     messages = [
         {'role': 'system', 'content': SYSTEM_PROMPT},
         {'role': 'user', 'content': prompt}
@@ -35,10 +35,10 @@ async def chat_gpt_request(transcript: str, model: str = 'gpt-3.5-turbo') -> str
     if tokens > max_tokens:
         prompts = split_string_on_space(transcript, max_tokens)
     else:
-        return req(transcript, model)
+        return await req(transcript, model)
 
     responses = await parallel_chat_gpt_request(prompts, model)
 
     text = ' '.join(responses)
 
-    return req(text, model)
+    return await req(text, model)
