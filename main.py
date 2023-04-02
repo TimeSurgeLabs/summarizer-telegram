@@ -21,6 +21,9 @@ async def handle_ping(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Echo the user message."""
+    # temporary fix. Make sure to fix the regex later. This prevents non youtube links from being processed
+    if not 'youtu.be' in update.message.text and not 'youtube.com' in update.message.text:
+        return
     videoId = get_youtube_video_id(update.message.text)
     if not videoId:
         return
