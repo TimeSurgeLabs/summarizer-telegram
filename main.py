@@ -21,8 +21,10 @@ async def handle_ping(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     """Echo the user message."""
-    m = await update.message.reply_text("Loading summary....", reply_to_message_id=update.message.message_id)
     videoId = get_youtube_video_id(update.message.text)
+    if not videoId:
+        return
+    m = await update.message.reply_text("Loading summary....", reply_to_message_id=update.message.message_id)
     logger.info(f'Getting transcript for {videoId}...')
     try:
         resp = db.get_transcript(videoId)
@@ -46,6 +48,7 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         await m.edit_text(f'Summary for "{title}"\n\n{summary}')
         # post to db
         db.post_summary(videoId, summary)
+        logger.info(f'Posted summary for {videoId} to DB')
     except Exception as e:
         logger.error(e)
         await m.edit_text('Error generating summary. If this is a valid video, please try again later.')
