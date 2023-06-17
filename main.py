@@ -52,7 +52,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     except Exception as e:
         logger.error(e)
         logger.error(resp)
-        await m.edit_text('Error generating summary. If this is a valid video, please try again later.')
+        if "error" in resp:
+            await m.edit_text(resp['error'])
+        else:
+            await m.edit_text('Error generating summary. If this is a valid video, please try again later.')
 
 
 def main() -> None:
