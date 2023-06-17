@@ -43,9 +43,10 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         try:
             summary = db.get_summary(videoId, str(update.message.chat_id))
         except:
-            pass
+            raise Exception('Error getting summary from DB')
         if summary:
             logger.info(f'Got summary for {videoId} from DB')
+            logger.info(summary)
             await m.edit_text(f'Summary for "{title}"\n\n{summary.get("summary")}')
             return
         logger.info(f'Posted summary for {videoId} to DB')
