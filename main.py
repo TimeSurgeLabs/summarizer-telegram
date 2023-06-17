@@ -47,6 +47,9 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
         if summary:
             logger.info(f'Got summary for {videoId} from DB')
             logger.info(summary)
+            if 'error' in summary:
+                await m.edit_text(summary['error'])
+                return
             await m.edit_text(f'Summary for "{title}"\n\n{summary.get("summary")}')
             return
         logger.info(f'Posted summary for {videoId} to DB')
